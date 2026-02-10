@@ -1,22 +1,15 @@
-#include "raylib.h"
-
+#include <memory>
+#include <raylib.h>
+#include <graphics.hpp>
 int main()
 {
-    const int screenWidth = 800;
-    const int screenHeight = 600;
-
-    InitWindow(screenWidth, screenHeight, "Raylib Basic Window");
-
-    SetTargetFPS(165);
+    auto graphics = std::make_unique<EcoSim::Graphics>();
+    graphics->backgroundColor = EcoSim::Color(100, 147, 249);
 
     while (!WindowShouldClose())
     {
-        BeginDrawing();
-        ClearBackground(RAYWHITE);
-        DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
-        EndDrawing();
+        graphics->render();
     }
 
-    CloseWindow();
     return 0;
 }
