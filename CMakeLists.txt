@@ -60,6 +60,13 @@ target_link_libraries(EcoSystem PRIVATE
 )
 
 # -----------------------------
+# ASSETS
+# -----------------------------
+
+file(COPY ${CMAKE_SOURCE_DIR}/assets DESTINATION ${CMAKE_BINARY_DIR})
+
+
+# -----------------------------
 # OUTPUT DIRECTORY
 # -----------------------------
 set_target_properties(EcoSystem PROPERTIES
