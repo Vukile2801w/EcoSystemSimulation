@@ -1,18 +1,12 @@
 #include <memory>
-#include <raylib.h>
-#include <engine.hpp>
+#include <raylib/raylibGraphics.hpp>
 
 int main()
 {
-    auto graphics = std::make_unique<EcoSim::Graphics>();
+    auto graphics = std::make_unique<EcoSim::RaylibGraphics>(800, 600, "My Window");
     graphics->backgroundColor = EcoSim::Color(100, 147, 249);
 
-    EcoSim::Texture backGround = EcoSim::Texture("assets/background.png");
-
-    graphics->addDrawCallback([&]()
-                              { DrawTexture(backGround.getNative(), 0, 0, WHITE); });
-
-    while (!WindowShouldClose())
+    while (graphics->isRunning())
     {
         graphics->render();
     }

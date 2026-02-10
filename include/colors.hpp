@@ -90,11 +90,6 @@ namespace EcoSim
             m_clampColor();
         }
 
-        operator ::Color() const
-        {
-            return ::Color{r, g, b, a}; // Raylib Color
-        }
-
     private:
         /// @brief
         /// Clamps the color components to the range [0, 255].

@@ -1,17 +1,12 @@
 #ifndef GRAPHICS_HPP
 #define GRAPHICS_HPP
 
-// Standard includes
 #include <string>
 #include <vector>
+#include <memory>
 #include <functional>
-
-// External includes
-#include <raylib.h>
-
-// Internal includes
-#include <math.hpp>
-#include <colors.hpp>
+#include "colors.hpp"
+#include "math.hpp"
 
 namespace EcoSim
 {
@@ -22,23 +17,21 @@ namespace EcoSim
         std::string title;
         Color backgroundColor = Color(255, 255, 255, 255);
 
-        bool isRunning = true;
-
-        Graphics();
+        Graphics() : Graphics(800, 600, "Graphics Window") {};
         Graphics(int width, int height, const std::string &title = "Graphics Window");
-        Graphics(const Vector2Int &size, const std::string &title = "Graphics Window");
-
-        ~Graphics();
+        virtual ~Graphics();
 
         void addDrawCallback(const std::function<void()> &callback)
         {
             drawCallbacks.push_back(callback);
         }
 
-        void render();
+        virtual void render();
+        virtual bool isRunning();
 
-    private:
+    protected:
         std::vector<std::function<void()>> drawCallbacks;
     };
-};
+}
+
 #endif

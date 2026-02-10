@@ -4,6 +4,5 @@
 #include <colors.hpp>
 #include <graphics.hpp>
 #include <math.hpp>
-#include <texture.hpp>
 
 #endif

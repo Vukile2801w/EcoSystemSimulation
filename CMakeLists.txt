@@ -5,9 +5,6 @@ project(EcoSystem
     LANGUAGES CXX
 )
 
-# -----------------------------
-# C++ STANDARD
-# -----------------------------
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -15,9 +12,11 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # -----------------------------
 # AUTOMATSKO SKUPlJANJE .cpp FAJLOVA
 # -----------------------------
+# uzima sve cpp iz src/ i podfoldera, uključujući src/raylib
 file(GLOB_RECURSE PROJECT_SOURCES
     CONFIGURE_DEPENDS
     src/*.cpp
+    src/raylib/*.cpp
 )
 
 # -----------------------------
@@ -31,24 +30,17 @@ add_executable(EcoSystem ${PROJECT_SOURCES})
 target_include_directories(EcoSystem
     PRIVATE
         ${CMAKE_SOURCE_DIR}/include
+        ${CMAKE_SOURCE_DIR}/include/raylib
         ${CMAKE_SOURCE_DIR}/lib/raylib/include
 )
 
 # -----------------------------
-# LIBRARIES (primeri)
+# LINK LIBRARIES
 # -----------------------------
-# target_link_libraries(EcoSystem
-#     PRIVATE
-#         user32
-#         opengl32
-# )
-
-# Ako imaš .lib fajlove:
 target_link_directories(EcoSystem PRIVATE
- ${CMAKE_SOURCE_DIR}/lib/raylib/lib
+    ${CMAKE_SOURCE_DIR}/lib/raylib/lib
 )
 
-# link lib files
 target_link_libraries(EcoSystem PRIVATE
     raylib
     winmm
@@ -62,9 +54,7 @@ target_link_libraries(EcoSystem PRIVATE
 # -----------------------------
 # ASSETS
 # -----------------------------
-
 file(COPY ${CMAKE_SOURCE_DIR}/assets DESTINATION ${CMAKE_BINARY_DIR})
-
 
 # -----------------------------
 # OUTPUT DIRECTORY
