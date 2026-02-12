@@ -7,14 +7,13 @@
 #include <functional>
 #include "colors.hpp"
 #include "math.hpp"
+#include "texture.hpp"
 
 namespace EcoSim
 {
     class Graphics
     {
     public:
-        Vector2Int screenSize;
-        std::string title;
         Color backgroundColor = Color(255, 255, 255, 255);
 
         Graphics() : Graphics(800, 600, "Graphics Window") {};
@@ -26,11 +25,19 @@ namespace EcoSim
             drawCallbacks.push_back(callback);
         }
 
+        Vector2Int getScreenSize() const { return screenSize; }
+        std::string getScreenTitle() const { return title; }
+
         virtual void render();
         virtual bool isRunning();
 
+        virtual void drawTexture(Vector2Int position, Texture &texture) = 0;
+
     protected:
         std::vector<std::function<void()>> drawCallbacks;
+
+        Vector2Int screenSize;
+        std::string title;
     };
 }
 

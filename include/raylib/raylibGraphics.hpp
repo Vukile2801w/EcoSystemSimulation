@@ -16,6 +16,8 @@ namespace EcoSim
         void render() override;
         bool isRunning() override;
 
+        void drawTexture(Vector2Int position, Texture &texture) override;
+
     protected:
         ::Color toRaylibColor(const Color &c) const
         {

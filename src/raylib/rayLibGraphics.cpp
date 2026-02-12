@@ -1,4 +1,5 @@
 #include <raylib/raylibGraphics.hpp>
+#include <raylib/rayLibTexture.hpp>
 
 namespace EcoSim
 {
@@ -30,6 +31,12 @@ namespace EcoSim
     bool EcoSim::RaylibGraphics::isRunning()
     {
         return !WindowShouldClose();
+    }
+
+    void RaylibGraphics::drawTexture(Vector2Int position, Texture &tex)
+    {
+        auto &rlTex = static_cast<RaylibTexture &>(tex);
+        DrawTexture(rlTex.getNative(), position.x, position.y, toRaylibColor(Color(0xFFFFFF)));
     }
 
 }
