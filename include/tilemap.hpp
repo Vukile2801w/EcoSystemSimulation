@@ -59,6 +59,8 @@ namespace EcoSim
     public:
         TileMap(size_t w, size_t h, std::shared_ptr<Graphics> graphics, int tileSize = 32);
 
+        bool loadTileMap(const std::string &filename);
+
         TileID getTile(size_t x, size_t y) const;
         void setTile(size_t x, size_t y, TileID id);
 

@@ -33,6 +33,7 @@ target_include_directories(EcoSystem
         ${CMAKE_SOURCE_DIR}/include/raylib
         
         ${CMAKE_SOURCE_DIR}/lib/raylib/include
+        ${CMAKE_SOURCE_DIR}/lib/tinyxml2-11.0.0
 )
 
 # -----------------------------
@@ -40,6 +41,7 @@ target_include_directories(EcoSystem
 # -----------------------------
 target_link_directories(EcoSystem PRIVATE
     ${CMAKE_SOURCE_DIR}/lib/raylib/lib
+    
 )
 
 target_link_libraries(EcoSystem PRIVATE
@@ -50,6 +52,7 @@ target_link_libraries(EcoSystem PRIVATE
     kernel32
     user32
     shell32
+    tinyxml2
 )
 
 # -----------------------------

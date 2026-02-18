@@ -1,4 +1,7 @@
 #include "TileMap.hpp"
+#include <tinyxml2.h>
+#include <iostream>
+#include <sstream>
 
 namespace EcoSim
 {
@@ -61,6 +64,46 @@ namespace EcoSim
                            { draw(); });
     }
 
+    bool TileMap::loadTileMap(const std::string &filename)
+    {
+        tinyxml2::XMLDocument doc;
+        if (doc.LoadFile(filename.c_str()) != tinyxml2::XML_SUCCESS)
+        {
+            std::cerr << "Failed to load map file: " << filename << std::endl;
+            return false;
+        }
+
+        // Get tileset information
+        tinyxml2::XMLElement *tileset = doc.FirstChildElement("map")->FirstChildElement("tileset");
+        // Load tile definitions, parse as needed...
+
+        // Get the layer
+        tinyxml2::XMLElement *layer = doc.FirstChildElement("map")->FirstChildElement("layer");
+
+        // Parse tile data
+        const char *data = layer->FirstChildElement("data")->GetText();
+        std::stringstream ss(data);
+
+        size_t x = 0, y = 0;
+        std::string tileID;
+
+        while (std::getline(ss, tileID, ','))
+        {
+            // Assuming you already loaded the tile IDs into the TileRegistry
+            EcoSim::TileID id = std::stoi(tileID);
+            setTile(x, y, id);
+
+            x++;
+            if (x >= getWidth())
+            {
+                x = 0; // Move to the next row
+                y++;
+            }
+        }
+
+        return true;
+    }
+
     TileID TileMap::getTile(size_t x, size_t y) const
     {
         if (x >= width || y >= height)
@@ -90,8 +133,8 @@ namespace EcoSim
                 const TileDefinition &def = TileRegistry::get(id);
 
                 Vector2Int pos = {
-                    x * tileSize,
-                    y * tileSize};
+                    (int)x * tileSize,
+                    (int)y * tileSize};
 
                 g->drawTexture(pos, *(def.texture));
             }
