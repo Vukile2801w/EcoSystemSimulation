@@ -31,7 +31,7 @@ namespace EcoSim
         virtual void render();
         virtual bool isRunning();
 
-        virtual void drawTexture(Vector2Int position, Texture &texture) = 0;
+        virtual void drawTexture(Vector2 position, Texture &texture) = 0;
 
     protected:
         std::vector<std::function<void()>> drawCallbacks;

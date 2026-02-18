@@ -1,0 +1,7 @@
+set -e
+
+cd build
+cmake ..
+cmake --build .
+./Windows/EcoSystem.exe
+cd ..

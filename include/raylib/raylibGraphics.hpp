@@ -9,14 +9,14 @@ namespace EcoSim
     class RaylibGraphics : public Graphics
     {
     public:
-        RaylibGraphics() {}
+        RaylibGraphics() = delete;
         RaylibGraphics(int width, int height, const std::string &title = "Graphics Window");
         ~RaylibGraphics();
 
         void render() override;
         bool isRunning() override;
 
-        void drawTexture(Vector2Int position, Texture &texture) override;
+        void drawTexture(Vector2 position, Texture &texture) override;
 
     protected:
         ::Color toRaylibColor(const Color &c) const

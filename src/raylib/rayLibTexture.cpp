@@ -1,11 +1,13 @@
-#include <raylibTexture.hpp>
-#include <cassert>
+#include "raylibTexture.hpp"
+#include <iostream>
 
 namespace EcoSim
 {
     RaylibTexture::RaylibTexture(const std::string &path)
     {
         texture = LoadTexture(path.c_str());
+        width = texture.width;
+        height = texture.height;
     }
 
     RaylibTexture::~RaylibTexture()
@@ -13,21 +15,29 @@ namespace EcoSim
         UnloadTexture(texture);
     }
 
-    int RaylibTexture::getWidth()
+    int RaylibTexture::getWidth() const
     {
-        width = texture.width;
         return width;
     }
 
-    int RaylibTexture::getHeight()
+    int RaylibTexture::getHeight() const
     {
-        height = texture.height;
         return height;
     }
 
-    void RaylibTexture::GetTexture(void *textPtr)
+    // Ako imate void GetTexture(void *textPtr) ovde
+    void RaylibTexture::GetTexture(void *textPtr) // Izmijenite prema potpisu u headeru
     {
-        textPtr = &texture;
+        if (!isTextureLoaded())
+            std::cerr << "Texture is not loaded\n";
+        *static_cast<Texture2D **>(textPtr) = &texture;
+    }
+
+    Texture2D RaylibTexture::GetTexture()
+    {
+        if (!isTextureLoaded())
+            std::cerr << "Texture is not loaded\n";
+        return texture;
     }
 
     Texture2D &RaylibTexture::getNative()
@@ -35,8 +45,8 @@ namespace EcoSim
         return texture;
     }
 
-    bool RaylibTexture::isTextureLoaded()
+    bool RaylibTexture::isTextureLoaded() const // dodajte const
     {
-        return texture.id <= 0;
+        return texture.id > 0;
     }
 }

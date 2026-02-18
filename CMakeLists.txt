@@ -31,6 +31,7 @@ target_include_directories(EcoSystem
     PRIVATE
         ${CMAKE_SOURCE_DIR}/include
         ${CMAKE_SOURCE_DIR}/include/raylib
+        
         ${CMAKE_SOURCE_DIR}/lib/raylib/include
 )
 

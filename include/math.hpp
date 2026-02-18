@@ -5,6 +5,13 @@
 
 namespace EcoSim
 {
+    class Vector2;
+    class Vector2Int;
+    class Vector3;
+    class Vector3Int;
+    class Vector4;
+    class Vector4Int;
+
     class Vector2
     {
     public:
@@ -13,6 +20,13 @@ namespace EcoSim
 
         Vector2();
         Vector2(float x, float y);
+
+        operator Vector2Int() const;
+        operator Vector3Int() const;
+        operator Vector4Int() const;
+
+        operator Vector3() const;
+        operator Vector4() const;
     };
     class Vector2Int
     {
@@ -22,6 +36,13 @@ namespace EcoSim
 
         Vector2Int();
         Vector2Int(int x, int y);
+
+        operator Vector2() const;
+        operator Vector3() const;
+        operator Vector4() const;
+
+        operator Vector3Int() const;
+        operator Vector4Int() const;
     };
 
     class Vector3
@@ -33,6 +54,11 @@ namespace EcoSim
 
         Vector3();
         Vector3(float x, float y, float z);
+
+        operator Vector3Int() const;
+        operator Vector4Int() const;
+
+        operator Vector4() const;
     };
     class Vector3Int
     {
@@ -43,6 +69,11 @@ namespace EcoSim
 
         Vector3Int();
         Vector3Int(int x, int y, int z);
+
+        operator Vector3() const;
+        operator Vector4() const;
+
+        operator Vector4Int() const;
     };
 
     class Vector4
@@ -55,6 +86,9 @@ namespace EcoSim
 
         Vector4();
         Vector4(float x, float y, float z, float w);
+
+        operator Vector3() const;
+        operator Vector4Int() const;
     };
     class Vector4Int
     {
@@ -66,6 +100,9 @@ namespace EcoSim
 
         Vector4Int();
         Vector4Int(int x, int y, int z, int w);
+
+        operator Vector3Int() const;
+        operator Vector4() const;
     };
 
     /**

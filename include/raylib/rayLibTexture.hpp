@@ -9,21 +9,24 @@ namespace EcoSim
     class RaylibTexture : public Texture
     {
     public:
-        RaylibTexture();
         RaylibTexture(const std::string &filePath);
-        virtual ~RaylibTexture();
+        ~RaylibTexture();
 
-        int getWidth();
-        int getHeight();
+        int getWidth() const;
+        int getHeight() const;
 
-        void GetTexture(void *buffer);
         Texture2D &getNative();
+        void GetTexture(void *textPtr);
+        Texture2D GetTexture();
 
-        bool isTextureLoaded();
+        bool isTextureLoaded() const;
 
-    protected:
+    private:
         Texture2D texture;
+        int width;
+        int height;
     };
+
 }
 
 #endif

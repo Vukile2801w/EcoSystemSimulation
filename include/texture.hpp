@@ -10,9 +10,14 @@ namespace EcoSim
     public:
         Texture() {};
         Texture(const std::string filePath) {};
-        virtual ~Texture() {};
+
+        virtual ~Texture() = default;
+        virtual int getWidth() const = 0;
+        virtual int getHeight() const = 0;
 
         void GetTexture(void *buffer) {};
+
+        virtual bool isTextureLoaded() const = 0;
 
     protected:
         int width;

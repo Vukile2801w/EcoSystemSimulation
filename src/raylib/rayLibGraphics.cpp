@@ -33,7 +33,7 @@ namespace EcoSim
         return !WindowShouldClose();
     }
 
-    void RaylibGraphics::drawTexture(Vector2Int position, Texture &tex)
+    void RaylibGraphics::drawTexture(Vector2 position, Texture &tex)
     {
         auto &rlTex = static_cast<RaylibTexture &>(tex);
         DrawTexture(rlTex.getNative(), position.x, position.y, toRaylibColor(Color(0xFFFFFF)));
