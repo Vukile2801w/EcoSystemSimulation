@@ -74,6 +74,8 @@ namespace EcoSim
         size_t height;
         int tileSize;
 
+        Vector2 offset;
+
         std::vector<TileID> tiles;
         std::shared_ptr<Graphics> g;
     };

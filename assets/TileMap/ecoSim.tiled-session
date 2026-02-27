@@ -3,13 +3,22 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "",
+    "activeFile": "map.tmx",
     "expandedProjectPaths": [
+        "."
     ],
     "fileStates": {
         "#tiles": {
             "dynamicWrapping": true,
             "scaleInDock": 1
+        },
+        "map.tmx": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 74,
+                "y": -305.5
+            }
         },
         "tiles.tsx": {
             "dynamicWrapping": true,
@@ -18,14 +27,18 @@
         }
     },
     "last.imagePath": "C:/Users/User/Desktop/vuk/programiranje/c++/EcoSystemSimulation/assets",
+    "map.fixedSize": false,
     "map.height": 19,
     "map.lastUsedFormat": "tmx",
     "map.width": 25,
     "openFiles": [
+        "tiles.tsx",
+        "map.tmx"
     ],
     "project": "ecoSim.tiled-project",
     "recentFiles": [
-        "tiles.tsx"
+        "tiles.tsx",
+        "map.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.type": 0

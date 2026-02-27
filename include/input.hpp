@@ -152,10 +152,37 @@ namespace EcoSim
         struct KeyData
         {
             Key key;
-            // status;
+            // status
             bool isDown;
             bool isPressed;
             bool isReleased;
+        };
+
+        enum MouseButton
+        {
+            MOUSE_BUTTON_UNKNOWN,
+            MOUSE_BUTTON_LEFT,
+            MOUSE_BUTTON_RIGHT,
+            MOUSE_BUTTON_MIDDLE,
+            MOUSE_SCROLL_UP,
+            MOUSE_SCROLL_DOWN,
+            MOUSE_BUTTON_COUNT
+        };
+        static constexpr std::array<const char *, MOUSE_BUTTON_COUNT> mouseButtonName = {
+            "MOUSE_BUTTON_UNKNOWN", // 0
+            "MOUSE_BUTTON_LEFT",    // 1
+            "MOUSE_BUTTON_RIGHT",   // 2
+            "MOUSE_BUTTON_MIDDLE",  // 3
+            "MOUSE_SCROLL_UP",      // 4
+            "MOUSE_SCROLL_DOWN"     // 5
+        };
+
+        struct MouseButtonData
+        {
+            MouseButton button;
+            float value;     // 0 or 1 for buttons, or scroll amount for scroll wheel
+            bool isPressed;  // scroll wheel doesn't have pressed/released, but for buttons it does
+            bool isReleased; // same as above
         };
 
         virtual ~Input() = default;
@@ -166,9 +193,19 @@ namespace EcoSim
         bool isKeyPressed(Key key);
         bool isKeyReleased(Key key);
 
+        // Can also be used for mouse wheel scroll wheel. True if scrolled in given direction, false if not.
+        bool isMouseButtonDown(MouseButton key);
+        // Can also be used for mouse wheel scroll wheel. True if scrolled in given direction this frame.
+        bool isMouseButtonPressed(MouseButton key);
+        // Can also be used for mouse wheel scroll wheel. True if stop scrolling in given direction this frame.
+        bool isMouseButtonReleased(MouseButton key);
+
+        float getMouseScrollValue(MouseButton key);
+
     protected:
         Input() = default;
         std::array<KeyData, KEY_COUNT> keyData;
+        std::array<MouseButtonData, MOUSE_BUTTON_COUNT> mouseButtonData;
 
     private:
         Input(const Input &) = delete;
@@ -177,6 +214,10 @@ namespace EcoSim
     inline std::ostream &operator<<(std::ostream &os, Input::Key key)
     {
         return os << Input::keyName[static_cast<int>(key)];
+    }
+    inline std::ostream &operator<<(std::ostream &os, Input::MouseButton key)
+    {
+        return os << Input::mouseButtonName[static_cast<int>(key)];
     }
 }
 

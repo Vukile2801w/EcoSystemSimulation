@@ -24,10 +24,12 @@ namespace EcoSim
         operator Vector2Int() const;
         operator Vector3Int() const;
         operator Vector4Int() const;
-
         operator Vector3() const;
         operator Vector4() const;
+
+        bool operator==(const Vector2 &other) const; // Comparison operator
     };
+
     class Vector2Int
     {
     public:
@@ -40,9 +42,10 @@ namespace EcoSim
         operator Vector2() const;
         operator Vector3() const;
         operator Vector4() const;
-
         operator Vector3Int() const;
         operator Vector4Int() const;
+
+        bool operator==(const Vector2Int &other) const; // Comparison operator
     };
 
     class Vector3
@@ -57,9 +60,11 @@ namespace EcoSim
 
         operator Vector3Int() const;
         operator Vector4Int() const;
-
         operator Vector4() const;
+
+        bool operator==(const Vector3 &other) const; // Comparison operator
     };
+
     class Vector3Int
     {
     public:
@@ -72,8 +77,9 @@ namespace EcoSim
 
         operator Vector3() const;
         operator Vector4() const;
-
         operator Vector4Int() const;
+
+        bool operator==(const Vector3Int &other) const; // Comparison operator
     };
 
     class Vector4
@@ -89,7 +95,10 @@ namespace EcoSim
 
         operator Vector3() const;
         operator Vector4Int() const;
+
+        bool operator==(const Vector4 &other) const; // Comparison operator
     };
+
     class Vector4Int
     {
     public:
@@ -103,6 +112,8 @@ namespace EcoSim
 
         operator Vector3Int() const;
         operator Vector4() const;
+
+        bool operator==(const Vector4Int &other) const; // Comparison operator
     };
 
     /**
@@ -130,5 +141,13 @@ namespace EcoSim
      * If the value is greater than the maximum, the maximum value is returned.
      **/
     int clamp(int value, int min, int max);
+
+    int min(int a, int b);
+    float min(float a, float b);
+
+    int max(int a, int b);
+    float max(float a, float b);
+
+    float easeOutQuad(float t);
 }
 #endif

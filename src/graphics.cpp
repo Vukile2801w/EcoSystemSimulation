@@ -15,6 +15,10 @@ namespace EcoSim
     {
         // može biti prazno, čisto stub
     }
+    void Graphics::update()
+    {
+        // može biti prazno, čisto stub
+    }
 
     bool Graphics::isRunning()
     {

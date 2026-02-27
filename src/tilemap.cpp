@@ -59,6 +59,9 @@ namespace EcoSim
     TileMap::TileMap(size_t w, size_t h, std::shared_ptr<Graphics> graphics, int tileSize)
         : width(w), height(h), g(graphics), tileSize(tileSize)
     {
+
+        offset = {0, 0};
+
         tiles.resize(width * height, TILE_AIR);
         g->addDrawCallback([this]()
                            { draw(); });
@@ -73,51 +76,141 @@ namespace EcoSim
             return false;
         }
 
-        // Get tileset information
-        tinyxml2::XMLElement *tileset = doc.FirstChildElement("map")->FirstChildElement("tileset");
-        // Load tile definitions, parse as needed...
+        tinyxml2::XMLElement *mapElement = doc.FirstChildElement("map");
+        if (!mapElement)
+            return false;
 
-        // Get the layer
-        tinyxml2::XMLElement *layer = doc.FirstChildElement("map")->FirstChildElement("layer");
+        tinyxml2::XMLElement *layer = mapElement->FirstChildElement("layer");
+        if (!layer)
+            return false;
 
-        // Parse tile data
-        const char *data = layer->FirstChildElement("data")->GetText();
-        std::stringstream ss(data);
+        tinyxml2::XMLElement *dataElement = layer->FirstChildElement("data");
+        if (!dataElement)
+            return false;
 
-        size_t x = 0, y = 0;
-        std::string tileID;
+        // Initialize offsets
+        offset.x = 0;
+        offset.y = 0;
 
-        while (std::getline(ss, tileID, ','))
+        int minX = INT_MAX;
+        int minY = INT_MAX;
+        int maxX = INT_MIN;
+        int maxY = INT_MIN;
+
+        for (tinyxml2::XMLElement *chunk = dataElement->FirstChildElement("chunk");
+             chunk;
+             chunk = chunk->NextSiblingElement("chunk"))
         {
-            // Assuming you already loaded the tile IDs into the TileRegistry
-            EcoSim::TileID id = std::stoi(tileID);
-            setTile(x, y, id);
+            int chunkX = chunk->IntAttribute("x");
+            int chunkY = chunk->IntAttribute("y");
+            int chunkWidth = chunk->IntAttribute("width");
+            int chunkHeight = chunk->IntAttribute("height");
 
-            x++;
-            if (x >= getWidth())
+            if (chunkX < minX)
+                minX = chunkX;
+            if (chunkY < minY)
+                minY = chunkY;
+
+            if (chunkX + chunkWidth > maxX)
+                maxX = chunkX + chunkWidth;
+            if (chunkY + chunkHeight > maxY)
+                maxY = chunkY + chunkHeight;
+        }
+
+        if (minX == INT_MAX || minY == INT_MAX)
+            return false;
+
+        // Proceed with setting offsets
+        offset.x = minX;
+        offset.y = minY;
+
+        width = maxX - minX;
+        height = maxY - minY;
+
+        tiles.clear();
+        tiles.resize(width * height, TILE_AIR);
+
+        // ===============================
+        // 2️⃣ Učitaj tile podatke
+        // ===============================
+
+        for (tinyxml2::XMLElement *chunk = dataElement->FirstChildElement("chunk");
+             chunk;
+             chunk = chunk->NextSiblingElement("chunk"))
+        {
+            int chunkX = chunk->IntAttribute("x");
+            int chunkY = chunk->IntAttribute("y");
+            int chunkWidth = chunk->IntAttribute("width");
+
+            const char *data = chunk->GetText();
+            if (!data)
+                continue;
+
+            std::stringstream ss(data);
+            std::string tileID;
+
+            int tileX = 0;
+            int tileY = 0;
+
+            while (std::getline(ss, tileID, ','))
             {
-                x = 0; // Move to the next row
-                y++;
+                if (tileID.empty())
+                    continue;
+
+                int id = std::stoi(tileID);
+
+                int globalX = chunkX + tileX;
+                int globalY = chunkY + tileY;
+
+                int localX = globalX - offset.x;
+                int localY = globalY - offset.y;
+
+                if (localX >= 0 && localY >= 0 &&
+                    localX < (int)width &&
+                    localY < (int)height)
+                {
+                    tiles[localY * width + localX] = (TileID)id;
+                }
+
+                tileX++;
+                if (tileX >= chunkWidth)
+                {
+                    tileX = 0;
+                    tileY++;
+                }
             }
         }
+
+        std::cout << "Map loaded: "
+                  << width << "x" << height
+                  << " | Offset: (" << offset.x << ", " << offset.y << ")"
+                  << std::endl;
 
         return true;
     }
 
     TileID TileMap::getTile(size_t x, size_t y) const
     {
-        if (x >= width || y >= height)
+        if (x < offset.x || y < offset.y ||
+            static_cast<size_t>(x - offset.x) >= width ||
+            static_cast<size_t>(y - offset.y) >= height)
+        {
             return TILE_AIR;
+        }
 
-        return tiles[y * width + x];
+        return tiles[(y - offset.y) * width + (x - offset.x)];
     }
 
     void TileMap::setTile(size_t x, size_t y, TileID id)
     {
-        if (x >= width || y >= height)
+        if (x < offset.x || y < offset.y ||
+            static_cast<size_t>(x - offset.x) >= width ||
+            static_cast<size_t>(y - offset.y) >= height)
+        {
             return;
+        }
 
-        tiles[y * width + x] = id;
+        tiles[(y - offset.y) * width + (x - offset.x)] = id;
     }
 
     void TileMap::draw()
@@ -133,8 +226,8 @@ namespace EcoSim
                 const TileDefinition &def = TileRegistry::get(id);
 
                 Vector2Int pos = {
-                    (int)x * tileSize,
-                    (int)y * tileSize};
+                    (int)(x + offset.x) * tileSize,
+                    (int)(y + offset.y) * tileSize};
 
                 g->drawTexture(pos, *(def.texture));
             }

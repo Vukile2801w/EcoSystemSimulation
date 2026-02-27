@@ -14,6 +14,7 @@ namespace EcoSim
         ~RaylibGraphics();
 
         void render() override;
+        void update() override;
         bool isRunning() override;
 
         void drawTexture(Vector2 position, Texture &texture) override;

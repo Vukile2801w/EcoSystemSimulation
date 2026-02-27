@@ -35,6 +35,11 @@ namespace EcoSim
         return Vector4(x, y, 0.0f, 0.0f);
     }
 
+    bool Vector2::operator==(const Vector2 &other) const
+    {
+        return (x == other.x) && (y == other.y);
+    }
+
     // ===============================
     // Vector2Int
     // ===============================
@@ -67,6 +72,11 @@ namespace EcoSim
         return Vector4Int(x, y, 0, 0);
     }
 
+    bool Vector2Int::operator==(const Vector2Int &other) const
+    {
+        return (x == other.x) && (y == other.y);
+    }
+
     // ===============================
     // Vector3
     // ===============================
@@ -87,6 +97,11 @@ namespace EcoSim
     Vector3::operator Vector4() const
     {
         return Vector4(x, y, z, 0.0f);
+    }
+
+    bool Vector3::operator==(const Vector3 &other) const
+    {
+        return (x == other.x) && (y == other.y) && (z == other.z);
     }
 
     // ===============================
@@ -111,6 +126,11 @@ namespace EcoSim
         return Vector4Int(x, y, z, 0);
     }
 
+    bool Vector3Int::operator==(const Vector3Int &other) const
+    {
+        return (x == other.x) && (y == other.y) && (z == other.z);
+    }
+
     // ===============================
     // Vector4
     // ===============================
@@ -131,6 +151,11 @@ namespace EcoSim
             static_cast<int>(y),
             static_cast<int>(z),
             static_cast<int>(w));
+    }
+
+    bool Vector4::operator==(const Vector4 &other) const
+    {
+        return (x == other.x) && (y == other.y) && (z == other.z) && (w == other.w);
     }
 
     // ===============================
@@ -155,6 +180,11 @@ namespace EcoSim
             static_cast<float>(w));
     }
 
+    bool Vector4Int::operator==(const Vector4Int &other) const
+    {
+        return (x == other.x) && (y == other.y) && (z == other.z) && (w == other.w);
+    }
+
     // ===============================
     // Clamp
     // ===============================
@@ -175,6 +205,29 @@ namespace EcoSim
         if (value > max)
             return max;
         return value;
+    }
+
+    int min(int a, int b)
+    {
+        return (a < b) ? a : b;
+    }
+    int max(int a, int b)
+    {
+        return (a > b) ? a : b;
+    }
+
+    float min(float a, float b)
+    {
+        return (a < b) ? a : b;
+    }
+    float max(float a, float b)
+    {
+        return (a > b) ? a : b;
+    }
+
+    float easeOutQuad(float t)
+    {
+        return 1.0f - (1.0f - t) * (1.0f - t);
     }
 
 } // namespace EcoSim

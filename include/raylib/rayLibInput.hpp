@@ -2,6 +2,7 @@
 #define RAYLIBINPUT_HPP
 
 #include <input.hpp>
+#include <math.hpp>
 
 namespace EcoSim
 {

@@ -12,6 +12,13 @@ namespace EcoSim
                                  false,
                                  false};
         }
+        for (int i = 1; i < RayLibInput::MouseButton::MOUSE_BUTTON_COUNT; i++)
+        {
+            mouseButtonData[i] = MouseButtonData{static_cast<MouseButton>(i),
+                                                 0.0f,
+                                                 false,
+                                                 false};
+        }
     }
 
     RayLibInput::~RayLibInput() // Defined the destructor
@@ -234,5 +241,52 @@ namespace EcoSim
             keyData[i].isReleased = !currentlyDown && keyData[i].isDown;
             keyData[i].isDown = currentlyDown;
         }
+
+        for (int i = 1; i < MouseButton::MOUSE_BUTTON_COUNT; i++)
+        {
+            if (i <= MouseButton::MOUSE_BUTTON_UNKNOWN || i >= MouseButton::MOUSE_BUTTON_COUNT)
+                continue;
+            MouseButton button = static_cast<MouseButton>(i);
+            int raylibButton = -1;
+
+            switch (button)
+            {
+            case MouseButton::MOUSE_BUTTON_LEFT:
+                raylibButton = ::MOUSE_BUTTON_LEFT;
+                break;
+            case MouseButton::MOUSE_BUTTON_RIGHT:
+                raylibButton = ::MOUSE_BUTTON_RIGHT;
+                break;
+            case MouseButton::MOUSE_BUTTON_MIDDLE:
+                raylibButton = ::MOUSE_BUTTON_MIDDLE;
+                break;
+            default:
+                continue; // Skip unrecognized buttons
+            }
+
+            bool currentlyDown = IsMouseButtonDown(raylibButton);
+            mouseButtonData[i].isPressed = currentlyDown && !mouseButtonData[i].value > 0.0f ? true : false;
+            mouseButtonData[i].isReleased = !currentlyDown && mouseButtonData[i].value > 0.0f ? true : false;
+            mouseButtonData[i].value = currentlyDown;
+        }
+
+        // Handle mouse wheel separately since it's not a button
+        float wheelValue = GetMouseWheelMove();
+
+        //    UP    //
+#define mouseUP mouseButtonData[MouseButton::MOUSE_SCROLL_UP]
+        float clampUP = clamp(wheelValue, 0.0f, 1.0f);
+        bool isChanged = clampUP > 0.0f; // Changed from start of frame.
+        mouseUP.isPressed = isChanged && !mouseUP.value > 0.0f ? true : false;
+        mouseUP.isReleased = !isChanged && mouseUP.value > 0.0f ? true : false;
+        mouseUP.value = clampUP;
+
+        //   DOWN   //
+#define mouseDOWN mouseButtonData[MouseButton::MOUSE_SCROLL_DOWN]
+        float clampDOWN = clamp(-wheelValue, 0.0f, 1.0f);
+        isChanged = clampDOWN > 0.0f; // Changed from start of frame.
+        mouseDOWN.isPressed = isChanged && !mouseDOWN.value > 0.0f ? true : false;
+        mouseDOWN.isReleased = !isChanged && mouseDOWN.value > 0.0f ? true : false;
+        mouseDOWN.value = clampDOWN;
     }
 }
