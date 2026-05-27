@@ -61,7 +61,40 @@ namespace EcoSim
             transformed,
             0.0f,
             cam->GetZoom(),
-            ::Color(255, 255, 255, 255));
+            toRaylibColor(Color(255, 255, 255, 255))
+        );
+    }
+
+    void RaylibGraphics::drawCircle(Vector2 position, float radius, Color color)
+    {
+
+        ::Vector2 transformed = {
+            (position.x - cam->pos.x) * cam->GetZoom() + screenCenter().x,
+            (position.y - cam->pos.y) * cam->GetZoom() + screenCenter().y};
+
+        DrawCircleV(
+            transformed,
+            radius * cam->GetZoom(),
+            toRaylibColor(color)
+        );
+    }
+
+    void RaylibGraphics::drawRectangle(Vector2 position, Vector2 size, Color color)
+    {
+        ::Vector2 transformed = {
+            (position.x - cam->pos.x) * cam->GetZoom() + screenCenter().x,
+            (position.y - cam->pos.y) * cam->GetZoom() + screenCenter().y};
+
+        ::Vector2 pos = {
+            size.x * cam->GetZoom(),
+            size.y * cam->GetZoom()
+        };
+
+        DrawRectangleV(
+            transformed,
+            pos,
+            toRaylibColor(color)
+        );
     }
 
 }

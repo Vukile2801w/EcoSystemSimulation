@@ -7,6 +7,9 @@
 #include <tilemap.hpp>
 #include <rayLibInput.hpp>
 #include <time.hpp>
+#include <entityManager.hpp>
+#include <creature.hpp>
+
 
 int main()
 {
@@ -19,7 +22,7 @@ int main()
 
     auto input = std::make_shared<EcoSim::RayLibInput>();
 
-    std::vector<std::shared_ptr<EcoSim::RaylibTexture>> textures = EcoSim::RaylibTexture::loadTextureAtlas("C:/Users/User/Desktop/vuk/programiranje/c++/EcoSystemSimulation/build/assets/tilemap.png", {32, 32});
+    std::vector<std::shared_ptr<EcoSim::RaylibTexture>> textures = EcoSim::RaylibTexture::loadTextureAtlas("C:/Users/wukbg/programing/C++/EcoSystemSimulation/build/assets/tilemap.png", {32, 32});
     for (int i = 0; i < textures.size(); i++)
     {
         EcoSim::TileDefinition tile = EcoSim::TileDefinition();
@@ -30,7 +33,16 @@ int main()
     }
 
     EcoSim::TileMap *map = new EcoSim::TileMap(25, 19, graphics, 32);
-    map->loadTileMap("C:/Users/User/Desktop/vuk/programiranje/c++/EcoSystemSimulation/build/assets/TileMap/map.tmx");
+    map->loadTileMap("C:/Users/wukbg/programing/C++/EcoSystemSimulation/build/assets/TileMap/map.tmx");
+
+    EcoSim::EntityManager entityManager(graphics, time);
+    
+
+    for (int i = 0; i < 5; i++)
+    {
+        entityManager.createEntity<EcoSim::Creature>(EcoSim::Vector2(i * 50 + 100, -200));
+    }
+    std::cout << "Created 5 creatures." << std::endl;
 
 #define SPEED 100.0f
 #define ZOOM_SPEED .2f
@@ -52,14 +64,9 @@ int main()
         {
             float scroll = input->getMouseScrollValue(EcoSim::Input::MOUSE_SCROLL_UP) - input->getMouseScrollValue(EcoSim::Input::MOUSE_SCROLL_DOWN);
             cam->SetZoom(cam->GetTargetZoom() + scroll * ZOOM_SPEED);
-
-            std::cout << "Mouse Scroll Button: {name: " << EcoSim::Input::MOUSE_SCROLL_UP << ", isDown: " << input->isMouseButtonDown(EcoSim::Input::MOUSE_SCROLL_UP) << ", isPressed: " << input->isMouseButtonPressed(EcoSim::Input::MOUSE_SCROLL_UP) << ", isReleased: " << input->isMouseButtonReleased(EcoSim::Input::MOUSE_SCROLL_UP) << ", value: " << input->getMouseScrollValue(EcoSim::Input::MOUSE_SCROLL_UP) << "}" << std::endl;
-
-            std::cout << "Mouse Scroll Button: {name: " << EcoSim::Input::MOUSE_SCROLL_DOWN << ", isDown: " << input->isMouseButtonDown(EcoSim::Input::MOUSE_SCROLL_DOWN) << ", isPressed: " << input->isMouseButtonPressed(EcoSim::Input::MOUSE_SCROLL_DOWN) << ", isReleased: " << input->isMouseButtonReleased(EcoSim::Input::MOUSE_SCROLL_DOWN) << ", value: " << input->getMouseScrollValue(EcoSim::Input::MOUSE_SCROLL_DOWN) << "}" << std::endl;
         }
 
         graphics->update();
-
         graphics->render();
     }
 

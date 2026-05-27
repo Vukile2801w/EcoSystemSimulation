@@ -40,6 +40,8 @@ namespace EcoSim
         virtual bool isRunning();
 
         virtual void drawTexture(Vector2 position, Texture &texture) = 0;
+        virtual void drawCircle(Vector2 position, float radius, Color color) = 0;
+        virtual void drawRectangle(Vector2 position, Vector2 size, Color color) = 0;
 
         std::shared_ptr<Camera> getCameraComponet() const
         {

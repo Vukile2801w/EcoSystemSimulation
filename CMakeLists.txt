@@ -24,6 +24,11 @@ file(GLOB_RECURSE PROJECT_SOURCES
 # -----------------------------
 add_executable(EcoSystem ${PROJECT_SOURCES})
 
+target_compile_options(EcoSystem PRIVATE
+    -g
+    -O0
+)
+
 # -----------------------------
 # INCLUDE PATHS
 # -----------------------------
@@ -41,7 +46,7 @@ target_include_directories(EcoSystem
 # -----------------------------
 target_link_directories(EcoSystem PRIVATE
     ${CMAKE_SOURCE_DIR}/lib/raylib/lib
-    
+    ${CMAKE_SOURCE_DIR}/lib/tinyxml2-11.0.0/build
 )
 
 target_link_libraries(EcoSystem PRIVATE

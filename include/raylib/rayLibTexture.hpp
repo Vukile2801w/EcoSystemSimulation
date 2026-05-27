@@ -37,7 +37,7 @@ namespace EcoSim
 
         RaylibTexture copyToOtherTexture(Vector4 src, Vector4 dest);
 
-        static bool isImageEmpty(Texture tex, Vector4 rect = {0, 0, 0, 0});
+        static bool isImageEmpty(::Texture tex, Vector4 rect = {0, 0, 0, 0});
 
         static std::vector<std::shared_ptr<RaylibTexture>>
         loadTextureAtlas(const std::string &filePath, Vector2Int tileSize);

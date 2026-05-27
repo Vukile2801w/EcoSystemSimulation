@@ -18,12 +18,14 @@ namespace EcoSim
         bool isRunning() override;
 
         void drawTexture(Vector2 position, Texture &texture) override;
-
-    protected:
-        ::Color toRaylibColor(const Color &c) const
+        void drawCircle(Vector2 position, float radius, Color color);
+        void drawRectangle(Vector2 position, Vector2 size, Color color);
+    
+        static ::Color toRaylibColor(const Color &c)
         {
             return ::Color{c.r, c.g, c.b, c.a}; // Raylib Color
         }
+        protected:
     };
 }
 
