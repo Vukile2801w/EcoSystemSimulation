@@ -2,7 +2,7 @@
 #define MATH_HPP
 
 #include <cstdint>
-
+#include <cmath>
 namespace EcoSim
 {
     class Vector2;
@@ -27,7 +27,43 @@ namespace EcoSim
         operator Vector3() const;
         operator Vector4() const;
 
-        bool operator==(const Vector2 &other) const; // Comparison operator
+        bool operator==(const Vector2 &other) const;                              // Comparison operator
+        bool operator!=(const Vector2 &other) const { return !(*this == other); } // Inequality operator
+
+        Vector2 operator+(const Vector2 &other)
+        {
+            return Vector2(x + other.x, y + other.y);
+        }
+
+        Vector2 operator-(const Vector2 &other)
+        {
+            return Vector2(x - other.x, y - other.y);
+        }
+
+        Vector2 operator*(float scalar) const
+        {
+            return Vector2(x * scalar, y * scalar);
+        }
+
+        float dist(const Vector2 &other) const
+        {
+            float dx = x - other.x;
+            float dy = y - other.y;
+            return sqrt(dx * dx + dy * dy);
+        }
+
+        Vector2 normalize() const
+        {
+            float length = sqrt(x * x + y * y);
+            if (length == 0)
+                return Vector2(0, 0);
+            return Vector2(x / length, y / length);
+        }
+
+        float length() const
+        {
+            return sqrt(x * x + y * y);
+        }
     };
 
     class Vector2Int
@@ -45,7 +81,43 @@ namespace EcoSim
         operator Vector3Int() const;
         operator Vector4Int() const;
 
-        bool operator==(const Vector2Int &other) const; // Comparison operator
+        bool operator==(const Vector2Int &other) const;                              // Comparison operator
+        bool operator!=(const Vector2Int &other) const { return !(*this == other); } // Inequality operator
+
+        Vector2Int operator+(const Vector2Int &other)
+        {
+            return Vector2Int(x + other.x, y + other.y);
+        }
+
+        Vector2Int operator-(const Vector2Int &other)
+        {
+            return Vector2Int(x - other.x, y - other.y);
+        }
+
+        Vector2Int operator*(int scalar) const
+        {
+            return Vector2Int(x * scalar, y * scalar);
+        }
+
+        float dist(const Vector2Int &other) const
+        {
+            int dx = x - other.x;
+            int dy = y - other.y;
+            return sqrt(dx * dx + dy * dy);
+        }
+
+        Vector2Int normalize() const
+        {
+            float length = sqrt(x * x + y * y);
+            if (length == 0)
+                return Vector2Int(0, 0);
+            return Vector2Int(static_cast<int>(x / length), static_cast<int>(y / length));
+        }
+
+        float length() const
+        {
+            return sqrt(x * x + y * y);
+        }
     };
 
     class Vector3
@@ -62,7 +134,44 @@ namespace EcoSim
         operator Vector4Int() const;
         operator Vector4() const;
 
-        bool operator==(const Vector3 &other) const; // Comparison operator
+        bool operator==(const Vector3 &other) const;                              // Comparison operator
+        bool operator!=(const Vector3 &other) const { return !(*this == other); } // Inequality operator
+
+        Vector3 operator+(const Vector3 &other)
+        {
+            return Vector3(x + other.x, y + other.y, z + other.z);
+        }
+
+        Vector3 operator-(const Vector3 &other)
+        {
+            return Vector3(x - other.x, y - other.y, z - other.z);
+        }
+
+        Vector3 operator*(float scalar) const
+        {
+            return Vector3(x * scalar, y * scalar, z * scalar);
+        }
+
+        float dist(const Vector3 &other) const
+        {
+            float dx = x - other.x;
+            float dy = y - other.y;
+            float dz = z - other.z;
+            return sqrt(dx * dx + dy * dy + dz * dz);
+        }
+
+        Vector3 normalize() const
+        {
+            float length = sqrt(x * x + y * y + z * z);
+            if (length == 0)
+                return Vector3(0, 0, 0);
+            return Vector3(x / length, y / length, z / length);
+        }
+
+        float length() const
+        {
+            return sqrt(x * x + y * y + z * z);
+        }
     };
 
     class Vector3Int
@@ -79,7 +188,44 @@ namespace EcoSim
         operator Vector4() const;
         operator Vector4Int() const;
 
-        bool operator==(const Vector3Int &other) const; // Comparison operator
+        bool operator==(const Vector3Int &other) const;                              // Comparison operator
+        bool operator!=(const Vector3Int &other) const { return !(*this == other); } // Inequality operator
+
+        Vector3Int operator+(const Vector3Int &other) const
+        {
+            return Vector3Int(x + other.x, y + other.y, z + other.z);
+        }
+
+        Vector3Int operator-(const Vector3Int &other) const
+        {
+            return Vector3Int(x - other.x, y - other.y, z - other.z);
+        }
+
+        Vector3Int operator*(int scalar) const
+        {
+            return Vector3Int(x * scalar, y * scalar, z * scalar);
+        }
+
+        float dist(const Vector3Int &other) const
+        {
+            int dx = x - other.x;
+            int dy = y - other.y;
+            int dz = z - other.z;
+            return sqrt(dx * dx + dy * dy + dz * dz);
+        }
+
+        Vector3Int normalize() const
+        {
+            float length = sqrt(x * x + y * y + z * z);
+            if (length == 0)
+                return Vector3Int(0, 0, 0);
+            return Vector3Int(static_cast<int>(x / length), static_cast<int>(y / length), static_cast<int>(z / length));
+        }
+
+        float length() const
+        {
+            return sqrt(x * x + y * y + z * z);
+        }
     };
 
     class Vector4
@@ -96,7 +242,45 @@ namespace EcoSim
         operator Vector3() const;
         operator Vector4Int() const;
 
-        bool operator==(const Vector4 &other) const; // Comparison operator
+        bool operator==(const Vector4 &other) const;                              // Comparison operator
+        bool operator!=(const Vector4 &other) const { return !(*this == other); } // Inequality operator
+
+        Vector4 operator+(const Vector4 &other) const
+        {
+            return Vector4(x + other.x, y + other.y, z + other.z, w + other.w);
+        }
+
+        Vector4 operator-(const Vector4 &other) const
+        {
+            return Vector4(x - other.x, y - other.y, z - other.z, w - other.w);
+        }
+
+        Vector4 operator*(float scalar) const
+        {
+            return Vector4(x * scalar, y * scalar, z * scalar, w * scalar);
+        }
+
+        float dist(const Vector4 &other) const
+        {
+            float dx = x - other.x;
+            float dy = y - other.y;
+            float dz = z - other.z;
+            float dw = w - other.w;
+            return sqrt(dx * dx + dy * dy + dz * dz + dw * dw);
+        }
+
+        Vector4 normalize() const
+        {
+            float length = sqrt(x * x + y * y + z * z + w * w);
+            if (length == 0)
+                return Vector4(0, 0, 0, 0);
+            return Vector4(x / length, y / length, z / length, w / length);
+        }
+
+        float length() const
+        {
+            return sqrt(x * x + y * y + z * z + w * w);
+        }
     };
 
     class Vector4Int
@@ -113,7 +297,39 @@ namespace EcoSim
         operator Vector3Int() const;
         operator Vector4() const;
 
-        bool operator==(const Vector4Int &other) const; // Comparison operator
+        bool operator==(const Vector4Int &other) const;                              // Comparison operator
+        bool operator!=(const Vector4Int &other) const { return !(*this == other); } // Inequality operator
+
+        Vector4Int operator+(const Vector4Int &other) const
+        {
+            return Vector4Int(x + other.x, y + other.y, z + other.z, w + other.w);
+        }
+        Vector4Int operator-(const Vector4Int &other) const
+        {
+            return Vector4Int(x - other.x, y - other.y, z - other.z, w - other.w);
+        }
+
+        Vector4Int operator*(int scalar) const
+        {
+            return Vector4Int(x * scalar, y * scalar, z * scalar, w * scalar);
+        }
+
+        float dist(const Vector4Int &other) const
+        {
+            int dx = x - other.x;
+            int dy = y - other.y;
+            int dz = z - other.z;
+            int dw = w - other.w;
+            return sqrt(dx * dx + dy * dy + dz * dz + dw * dw);
+        }
+
+        Vector4Int normalize() const
+        {
+            float length = sqrt(x * x + y * y + z * z + w * w);
+            if (length == 0)
+                return Vector4Int(0, 0, 0, 0);
+            return Vector4Int(static_cast<int>(x / length), static_cast<int>(y / length), static_cast<int>(z / length), static_cast<int>(w / length));
+        }
     };
 
     /**
@@ -149,5 +365,10 @@ namespace EcoSim
     float max(float a, float b);
 
     float easeOutQuad(float t);
+    float easeInOut(float t);
+
+    float random(float min, float max);
+    int random(int min, int max);
 }
+
 #endif

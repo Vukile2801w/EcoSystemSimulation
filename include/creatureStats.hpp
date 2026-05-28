@@ -1,30 +1,39 @@
 #ifndef CREATURE_STATS_HPP
 #define CREATURE_STATS_HPP
 
-namespace EcoSim{
-    
+namespace EcoSim
+{
+
     /// Basic stats for a creature in the ecosystem simulation
     struct CreatureStats
     {
-        CreatureStats() = default; // Default empty constructor
+        CreatureStats() = default;                                                                           // Default empty constructor
         CreatureStats(float health, float energy, float speed, float visionRange, float age, float lifespan) // Default constructor with parameters
-            : health(health), energy(energy), speed(speed), visionRange(visionRange), age(age), lifespan(lifespan) {}
-        CreatureStats(const CreatureStats& other) { // Copy constructor
+            : health(health), maxHealth(health), energy(energy), maxEnergy(energy), speed(speed), visionRange(visionRange), age(age), lifespan(lifespan)
+        {
+        }
+        CreatureStats(const CreatureStats &other)
+        { // Copy constructor
             health = other.health;
+            maxHealth = other.maxHealth;
             energy = other.energy;
+            maxEnergy = other.maxEnergy;
             speed = other.speed;
             visionRange = other.visionRange;
             age = other.age;
             lifespan = other.lifespan;
         };
 
-        float health; // Current health level
-        float energy; // Current energy level
+        float health;    // Current health level
+        float maxHealth; // Maximum health level (can be used for normalization)
 
-        float speed; // Movement speed in units per second
+        float energy;    // Current energy level
+        float maxEnergy; // Maximum energy level (can be used for normalization)
+
+        float speed;       // Movement speed in units per second
         float visionRange; // How far the creature can see in units
 
-        float age; // Current age in seconds
+        float age;      // Current age in seconds
         float lifespan; // Maximum age before death in seconds
     };
 
@@ -37,7 +46,6 @@ namespace EcoSim{
         300.0f  // lifespan (5 minutes)
     };
 
-    
 }
 
 #endif // CREATURE_STATS_HPP

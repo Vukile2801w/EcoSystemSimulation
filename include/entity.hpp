@@ -5,17 +5,23 @@
 #include <graphics.hpp>
 #include <memory>
 
-namespace EcoSim{
+namespace EcoSim
+{
+    class EntityManager;
+
     class Entity
     {
-    public:
-        Entity(const Entity&) = delete; // Disable copy constructor
-        Entity& operator=(const Entity&) = delete; // Disable copy assignment
+        friend class EntityManager;
 
-        Entity() = default; // Default constructor
-        ~Entity() = default; // Default destructor
+    public:
+        Entity(const Entity &) = delete;
+        Entity &operator=(const Entity &) = delete;
+
+        Entity() = default;
+        virtual ~Entity() = default;
 
         Vector2 position;
+
         virtual void update(float dt) = 0;
         virtual void render() = 0;
 
@@ -24,17 +30,16 @@ namespace EcoSim{
 
         bool alive() const { return isAlive; }
 
-        std::shared_ptr<Graphics> graphics; // Reference to the graphics system for rendering
-        
-
+        std::shared_ptr<Graphics> graphics;
 
     protected:
-        bool isAlive = true; // Flag to indicate if the entity is alive
+        bool isAlive = true;
+
+        std::shared_ptr<EntityManager> entityManager;
 
     private:
-        int id_ = 0; // Unique identifier for the entity
-
+        int id_ = 0;
     };
 }
 
-#endif // ENTITY_HPP
+#endif

@@ -9,7 +9,8 @@
 #include <time.hpp>
 #include <entityManager.hpp>
 #include <creature.hpp>
-
+#include <herbivore.hpp>
+#include <carnivore.hpp>
 
 int main()
 {
@@ -35,14 +36,14 @@ int main()
     EcoSim::TileMap *map = new EcoSim::TileMap(25, 19, graphics, 32);
     map->loadTileMap("C:/Users/wukbg/programing/C++/EcoSystemSimulation/build/assets/TileMap/map.tmx");
 
-    EcoSim::EntityManager entityManager(graphics, time);
-    
+    std::shared_ptr<EcoSim::EntityManager> entityManager = std::make_shared<EcoSim::EntityManager>(graphics, time);
 
-    for (int i = 0; i < 5; i++)
+    std::shared_ptr<EcoSim::Herbivore> herbivore;
+    for (int i = 0; i < 20; i++)
     {
-        entityManager.createEntity<EcoSim::Creature>(EcoSim::Vector2(i * 50 + 100, -200));
+        herbivore = entityManager->createEntity<EcoSim::Herbivore>(EcoSim::Vector2(i * 100, i * 50 - 1000));
     }
-    std::cout << "Created 5 creatures." << std::endl;
+    // std::shared_ptr<EcoSim::Carnivore> carnivore = entityManager->createEntity<EcoSim::Carnivore>(EcoSim::Vector2(400, -200));
 
 #define SPEED 100.0f
 #define ZOOM_SPEED .2f
@@ -65,6 +66,8 @@ int main()
             float scroll = input->getMouseScrollValue(EcoSim::Input::MOUSE_SCROLL_UP) - input->getMouseScrollValue(EcoSim::Input::MOUSE_SCROLL_DOWN);
             cam->SetZoom(cam->GetTargetZoom() + scroll * ZOOM_SPEED);
         }
+
+        std::cout << "Action: " << (int)herbivore->currentAction << " Energy: " << herbivore->stats.energy << " Reproduction Cooldown: " << herbivore->reproductionCooldown << std::endl;
 
         graphics->update();
         graphics->render();

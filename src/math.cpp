@@ -1,5 +1,5 @@
 #include "math.hpp"
-
+#include <cstdlib> // For rand() and RAND_MAX
 namespace EcoSim
 {
 
@@ -228,6 +228,27 @@ namespace EcoSim
     float easeOutQuad(float t)
     {
         return 1.0f - (1.0f - t) * (1.0f - t);
+    }
+    float easeInOut(float x)
+    {
+        x = clamp(x, 0.0f, 1.0f);
+
+        float k = 5.0f;
+
+        float a = 1.0f / (1.0f + std::exp(-k * (x - 0.5f)));
+        float min = 1.0f / (1.0f + std::exp(k * 0.5f));
+        float max = 1.0f / (1.0f + std::exp(-k * 0.5f));
+
+        return (a - min) / (max - min);
+    }
+
+    float random(float min, float max)
+    {
+        return min + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (max - min)));
+    }
+    int random(int min, int max)
+    {
+        return min + rand() % (max - min + 1);
     }
 
 } // namespace EcoSim
