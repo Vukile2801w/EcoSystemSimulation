@@ -32,21 +32,21 @@ int main()
         std::cout
             << " Registered tile " << i << " with ID: " << tileID << std::endl;
     }
-
-    EcoSim::TileMap *map = new EcoSim::TileMap(25, 19, graphics, 32);
-    map->loadTileMap("C:/Users/wukbg/programing/C++/EcoSystemSimulation/build/assets/TileMap/map.tmx");
+    std::unique_ptr<EcoSim::TileMap> map = EcoSim::TileMapGenerator::generatePerlinNoiseMap(300, 200, graphics, 32);
 
     std::shared_ptr<EcoSim::EntityManager> entityManager = std::make_shared<EcoSim::EntityManager>(graphics, time);
-
-    std::shared_ptr<EcoSim::Herbivore> herbivore;
-    for (int i = 0; i < 20; i++)
+    for (int i = 0; i < 10; i++)
     {
-        herbivore = entityManager->createEntity<EcoSim::Herbivore>(EcoSim::Vector2(i * 100, i * 50 - 1000));
+        entityManager->createEntity<EcoSim::Herbivore>(EcoSim::Vector2(i * 100 - 750, i * 50 - 500));
+    }
+    for (int i = 0; i < 3; i++)
+    {
+        entityManager->createEntity<EcoSim::Carnivore>(EcoSim::Vector2(i * 100 - 750, i * 50 - 500));
     }
     // std::shared_ptr<EcoSim::Carnivore> carnivore = entityManager->createEntity<EcoSim::Carnivore>(EcoSim::Vector2(400, -200));
 
-#define SPEED 100.0f
-#define ZOOM_SPEED .2f
+    float SPEED = 100.0f;
+    float ZOOM_SPEED = 0.2f;
     while (graphics->isRunning())
     {
         input->handleInput();
@@ -66,8 +66,23 @@ int main()
             float scroll = input->getMouseScrollValue(EcoSim::Input::MOUSE_SCROLL_UP) - input->getMouseScrollValue(EcoSim::Input::MOUSE_SCROLL_DOWN);
             cam->SetZoom(cam->GetTargetZoom() + scroll * ZOOM_SPEED);
         }
+        if (input->isKeyPressed(EcoSim::Input::KEY_R))
+        {
+            cam->SetZoom(1.0f);
+        }
+        if (input->isKeyPressed(EcoSim::Input::KEY_F))
+        {
+            cam->pos = EcoSim::Vector2(0, 0);
+        }
 
-        std::cout << "Action: " << (int)herbivore->currentAction << " Energy: " << herbivore->stats.energy << " Reproduction Cooldown: " << herbivore->reproductionCooldown << std::endl;
+        if (input->isKeyPressed(EcoSim::Input::KEY_SHIFT))
+        {
+            SPEED *= 2.0f;
+        }
+        if (input->isKeyPressed(EcoSim::Input::KEY_CTRL))
+        {
+            SPEED /= 2.0f;
+        }
 
         graphics->update();
         graphics->render();

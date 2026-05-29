@@ -16,6 +16,28 @@ namespace EcoSim
 
     void Herbivore::render()
     {
+        if (!isAlive)
+            return;
+
+        Color overlayColor;
+        switch (currentAction)
+        {
+        case CreatureAction::Eat:
+            overlayColor = Color(255, 255, 0); // Yellow overlay when eating
+            break;
+        case CreatureAction::Reproduce:
+            overlayColor = Color(0, 255, 255); // Cyan overlay when reprodu
+            break;
+        case CreatureAction::Flee:
+            overlayColor = Color(255, 0, 0); // Red overlay when fleeing
+            break;
+        case CreatureAction::Wander:
+            overlayColor = Color(255, 0, 255); // Magenta overlay when wandering
+        default:
+            overlayColor = Color(0, 255, 0); // Green overlay for other actions
+            break;
+        }
+        graphics->drawCircle(position, 12.0f, overlayColor);
         graphics->drawCircle(position, 10.0f, getColor());
     }
 
@@ -30,12 +52,12 @@ namespace EcoSim
     CreatureAction Herbivore::scoreActions()
     {
 
-        float EAT_BIAS = 1.5f;       // Bias towards eating when energy is low
-        float REPRODUCE_BIAS = 1.0f; // Bias towards reproducing when energy is sufficient
-        float WANDER_BIAS = 0.4f;    // Bias towards wandering when energy is sufficient
-        float FLEE_BIAS = 3.5f;      // Bias towards fleeing when health is low
+        float EAT_BIAS = 1.5f;      // Bias towards eating when energy is low
+        float REPRODUCE_BIAS = .8f; // Bias towards reproducing when energy is sufficient
+        float WANDER_BIAS = 0.3f;   // Bias towards wandering when energy is sufficient
+        float FLEE_BIAS = 4.0f;     // Bias towards fleeing when health is low
 
-        if (!this->isActionDone && !this->isActionDone)
+        if (!this->isActionDone && !this->isActionStarted)
         {
             switch (this->currentAction)
             {
@@ -54,6 +76,18 @@ namespace EcoSim
         std::unordered_map<CreatureAction, float> actionScores;
 
         std::vector<std::shared_ptr<Herbivore>> nearbyHerbivores = this->getCreaturesInVisionRangeOfType<Herbivore>();
+        float distanceToClosestHerbivore = std::numeric_limits<float>::max();
+        std::shared_ptr<Herbivore> closestMate = nullptr;
+        for (const auto &herbivore : nearbyHerbivores)
+        {
+            float distance = position.dist(herbivore->position);
+            if (distance < distanceToClosestHerbivore && herbivore.get() != this && herbivore->reproductionCooldown <= 0.0f)
+            {
+                distanceToClosestHerbivore = distance;
+                closestMate = herbivore;
+            }
+        }
+
         std::vector<std::shared_ptr<Carnivore>> nearbyCarnivores = this->getCreaturesInVisionRangeOfType<Carnivore>();
         float distanceToClosestCarnivore = std::numeric_limits<float>::max();
         for (const auto &carnivore : nearbyCarnivores)
@@ -68,7 +102,7 @@ namespace EcoSim
         actionScores[CreatureAction::Eat] = (1.0f - easeInOut((stats.energy / stats.maxEnergy))) * EAT_BIAS;
 
         actionScores[CreatureAction::Reproduce] =
-            easeInOut(stats.energy / stats.maxEnergy) * REPRODUCE_BIAS * (!nearbyHerbivores.empty() ? 1.0f : 0.0f) * (reproductionCooldown <= 0.0f ? 1.0f : 0.0f);
+            easeInOut(stats.energy / stats.maxEnergy) * REPRODUCE_BIAS * (closestMate ? 1.0f : 0.0f) * (reproductionCooldown <= 0.0f ? 1.0f : 0.0f);
 
         float fleeScore = 0.0f;
 
@@ -251,7 +285,6 @@ namespace EcoSim
             {
                 Vector2 direction = delta.normalize();
                 position = position + direction * stats.speed * dt;
-                graphics->drawCircle(targetPosition, 10.0f, Color(255, 255, 0));
             }
             else
             {

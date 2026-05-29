@@ -8,8 +8,8 @@ namespace EcoSim
     class Herbivore : public Creature
     {
     public:
-        Herbivore(Vector2 position) : Creature(position) { color = Color(0x1B7275); }
-        Herbivore(Vector2 position, CreatureStats stats) : Creature(position, stats) { color = Color(0x1B7275); }
+        Herbivore(Vector2 position) : Creature(position) { color = Color(0x6BCB77); }
+        Herbivore(Vector2 position, CreatureStats stats) : Creature(position, stats) { color = Color(0x6BCB77); }
 
         void render() override;
         void update(float dt) override;

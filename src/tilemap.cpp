@@ -2,6 +2,8 @@
 #include <tinyxml2.h>
 #include <iostream>
 #include <sstream>
+#include <perlin.hpp>
+#include <cfloat>
 
 namespace EcoSim
 {
@@ -189,11 +191,11 @@ namespace EcoSim
         return true;
     }
 
-    TileID TileMap::getTile(size_t x, size_t y) const
+    TileID TileMap::getTile(int x, int y) const
     {
         if (x < offset.x || y < offset.y ||
-            static_cast<size_t>(x - offset.x) >= width ||
-            static_cast<size_t>(y - offset.y) >= height)
+            (x - offset.x) >= width ||
+            (y - offset.y) >= height)
         {
             return TILE_AIR;
         }
@@ -201,11 +203,11 @@ namespace EcoSim
         return tiles[(y - offset.y) * width + (x - offset.x)];
     }
 
-    void TileMap::setTile(size_t x, size_t y, TileID id)
+    void TileMap::setTile(int x, int y, TileID id)
     {
         if (x < offset.x || y < offset.y ||
-            static_cast<size_t>(x - offset.x) >= width ||
-            static_cast<size_t>(y - offset.y) >= height)
+            (x - offset.x) >= width ||
+            (y - offset.y) >= height)
         {
             return;
         }
@@ -215,19 +217,57 @@ namespace EcoSim
 
     void TileMap::draw()
     {
-        for (size_t y = 0; y < height; y++)
+        auto cam = g->getCameraComponet();
+
+        float zoom = cam->GetZoom();
+
+        Vector2 size = g->getScreenSize();
+
+        int visibleTilesX =
+            (size.x / (tileSize * zoom)) + 2;
+
+        int visibleTilesY =
+            (size.y / (tileSize * zoom)) + 2;
+
+        int centerTileX =
+            (cam->pos.x / tileSize) - offset.x;
+
+        int centerTileY =
+            (cam->pos.y / tileSize) - offset.y;
+
+        int startX = centerTileX - visibleTilesX / 2;
+        int startY = centerTileY - visibleTilesY / 2;
+
+        int endX = startX + visibleTilesX + 1;
+        int endY = startY + visibleTilesY + 1;
+
+        // clamp
+        if (startX < 0)
+            startX = 0;
+        if (startY < 0)
+            startY = 0;
+
+        if (endX > (int)width)
+            endX = width;
+        if (endY > (int)height)
+            endY = height;
+
+        for (int y = startY; y < endY; y++)
         {
-            for (size_t x = 0; x < width; x++)
+            for (int x = startX; x < endX; x++)
             {
                 TileID id = tiles[y * width + x];
+
                 if (id == TILE_AIR)
                     continue;
 
-                const TileDefinition &def = TileRegistry::get(id);
+                const TileDefinition &def =
+                    TileRegistry::get(id);
 
-                Vector2Int pos = {
-                    (int)(x + offset.x) * tileSize,
-                    (int)(y + offset.y) * tileSize};
+                Vector2Int pos =
+                    {
+                        (x + offset.x) * tileSize + tileSize,
+                        (y + offset.y) * tileSize + tileSize};
 
                 g->drawTexture(pos, *(def.texture));
             }
@@ -244,4 +284,74 @@ namespace EcoSim
         return height;
     }
 
+    std::unique_ptr<EcoSim::TileMap>
+    TileMapGenerator::generatePerlinNoiseMap(
+        size_t width,
+        size_t height,
+        std::shared_ptr<Graphics> graphics,
+        int tileSize)
+    {
+        auto map =
+            std::make_unique<TileMap>(
+                width,
+                height,
+                graphics,
+                tileSize);
+
+        ValueNoise2D perlin = ValueNoise2D(7, 0.4, 2);
+
+        // Pre svega, zelim se izviniti samome sebi ako ikad se vratim ovde
+        // Ali sada je 22:34 29.05.2026 i sutra je republicko takmicenje
+        // Nemam vremena da acctually uradim ovo kako treba. Tako da `screw u`
+        // ID's ce biti hardcoded na osnovu redosleda u tilemap atlasu
+        // 🫸🫷🫸🫷🥀🥀 ne vracaj se ovde. God Help
+
+        TileID grass[] = {4, 5, 6, 7, 8};
+        TileID flowers[] = {1, 2, 3};
+
+        std::vector<float> noiseMap(width * height);
+
+        float minNoise = FLT_MAX;
+        float maxNoise = FLT_MIN;
+
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                float n = perlin.generate(
+                    x * 0.8f,
+                    y * 0.8f);
+
+                noiseMap[y * width + x] = n;
+
+                minNoise = std::min(minNoise, n);
+                maxNoise = std::max(maxNoise, n);
+            }
+        }
+
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                float n = noiseMap[y * width + x];
+
+                n = (n - minNoise) / (maxNoise - minNoise);
+
+                if (n < 0.7f)
+                {
+                    map->setTile(x, y, grass[rand() % 5]);
+                }
+                else
+                {
+                    map->setTile(x, y, flowers[rand() % 3]);
+                }
+            }
+        }
+
+        std::cout << "Perlin Noise Generated | Min: " << minNoise << " | Max: " << maxNoise << std::endl;
+
+        map->setOffset({-(int)width / 2, -(int)height / 2});
+
+        return map;
+    }
 }

@@ -61,10 +61,12 @@ namespace EcoSim
 
         bool loadTileMap(const std::string &filename);
 
-        TileID getTile(size_t x, size_t y) const;
-        void setTile(size_t x, size_t y, TileID id);
+        TileID getTile(int x, int y) const;
+        void setTile(int x, int y, TileID id);
 
         void draw();
+        Vector2 getOffset() const { return offset; }
+        void setOffset(Vector2 newOffset) { offset = newOffset; }
 
         size_t getWidth() const;
         size_t getHeight() const;
@@ -78,6 +80,17 @@ namespace EcoSim
 
         std::vector<TileID> tiles;
         std::shared_ptr<Graphics> g;
+    };
+
+    /// ===============================
+    /// TileMapPrucudural Generation
+    /// ===============================
+
+    class TileMapGenerator
+    {
+    public:
+        static std::unique_ptr<TileMap>
+        generatePerlinNoiseMap(size_t width, size_t height, std::shared_ptr<Graphics> graphics, int tileSize = 32);
     };
 
 } // namespace EcoSim

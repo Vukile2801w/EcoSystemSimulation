@@ -99,6 +99,8 @@ namespace EcoSim
 
     void Creature::render()
     {
+        if (!isAlive)
+            return;
         graphics->drawCircle(position, 10.0f, getColor());
     }
 

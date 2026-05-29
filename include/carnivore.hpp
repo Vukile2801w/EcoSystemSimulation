@@ -8,16 +8,15 @@ namespace EcoSim
     class Carnivore : public Creature
     {
     public:
-        Carnivore(Vector2 position) : Creature(position) {}
-        Carnivore(Vector2 position, CreatureStats stats) : Creature(position, stats) {}
+        Carnivore(Vector2 position) : Creature(position) { color = Color(0xD9534F); }
+        Carnivore(Vector2 position, CreatureStats stats) : Creature(position, stats) { color = Color(0xD9534F); }
 
-        void render() override { Creature::render(); }
+        void render() override;
         void update(float dt) override;
 
         CreatureAction scoreActions() override;
-
-    private:
-        Color color = Color(0x751B72);
+        void spawnChild(const CreatureStats &childStats) override;
+        void performAction(CreatureAction action, float dt) override;
     };
 }
 

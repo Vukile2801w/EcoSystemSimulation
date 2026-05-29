@@ -59,10 +59,9 @@ namespace EcoSim
         DrawTextureEx(
             rlTex.getNative(),
             transformed,
-            0.0f,
+            180.0f,
             cam->GetZoom(),
-            toRaylibColor(Color(255, 255, 255, 255))
-        );
+            toRaylibColor(Color(255, 255, 255, 255)));
     }
 
     void RaylibGraphics::drawCircle(Vector2 position, float radius, Color color)
@@ -75,8 +74,7 @@ namespace EcoSim
         DrawCircleV(
             transformed,
             radius * cam->GetZoom(),
-            toRaylibColor(color)
-        );
+            toRaylibColor(color));
     }
 
     void RaylibGraphics::drawRectangle(Vector2 position, Vector2 size, Color color)
@@ -87,14 +85,12 @@ namespace EcoSim
 
         ::Vector2 pos = {
             size.x * cam->GetZoom(),
-            size.y * cam->GetZoom()
-        };
+            size.y * cam->GetZoom()};
 
         DrawRectangleV(
             transformed,
             pos,
-            toRaylibColor(color)
-        );
+            toRaylibColor(color));
     }
 
 }
